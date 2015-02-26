@@ -1,0 +1,19 @@
+{
+  "name": "ngGridFlexibleHeightPlugin",
+  "version": "0.0.1",
+  "homepage": "https://github.com/tamirz/ngGridFlexibleHeightPlugin",
+  "authors": [
+    "tamirz <tamir.zur@gmail.com>"
+  ],
+  "description": "ng-grid flexible height plugin",
+  "main": "./ng-grid-flexible-height.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
