@@ -1,4 +1,7 @@
-function ngGridFlexibleHeightPlugin (opts) {
+// https://github.com/tamirz/ngGridFlexibleHeightPlugin
+// edited by Marc to make sure heights are not undefined
+
+function ngGridFlexibleHeightPlugin(opts) {
     var self = this;
     self.grid = null;
     self.scope = null;
@@ -8,10 +11,15 @@ function ngGridFlexibleHeightPlugin (opts) {
         self.scope = scope;
         var recalcHeightForData = function () { setTimeout(innerRecalcForData, 1); };
         var innerRecalcForData = function () {
-            var gridId = self.grid.gridId;
-            var footerPanelSel = '.' + gridId + ' .ngFooterPanel';
-            var extraHeight = self.grid.$topPanel.height() + $(footerPanelSel).height();
-            var naturalHeight = self.grid.$canvas.height() + 1;
+            var gridId = self.grid.gridId,
+                footerPanelSel = '.' + gridId + ' .ngFooterPanel',
+                footerPanelSelHeight = $(footerPanelSel).height() || 0,
+                topPanelHeight = !$.isEmptyObject(self.grid.$topPanel) && self.grid.$topPanel.height() ? self.grid.$topPanel.height() : 0,
+                topCanvasHeight = !$.isEmptyObject(self.grid.$canvas) && self.grid.$canvas.height() ? self.grid.$canvas.height() : 0,
+                extraHeight = topPanelHeight + footerPanelSelHeight,
+                naturalHeight = topCanvasHeight + 1,
+                newViewportHeight;
+
             if (opts != null) {
                 if (opts.minHeight != null && (naturalHeight + extraHeight) < opts.minHeight) {
                     naturalHeight = opts.minHeight - extraHeight - 2;
@@ -21,7 +29,8 @@ function ngGridFlexibleHeightPlugin (opts) {
                 }
             }
 
-            var newViewportHeight = naturalHeight + 3;
+            newViewportHeight = naturalHeight + 3; 
+
             if (!self.scope.baseViewportHeight || self.scope.baseViewportHeight !== newViewportHeight) {
                 self.grid.$viewport.css('height', newViewportHeight + 'px');
                 self.grid.$root.css('height', (newViewportHeight + extraHeight) + 'px');
@@ -31,7 +40,7 @@ function ngGridFlexibleHeightPlugin (opts) {
         };
         self.scope.catHashKeys = function () {
             var hash = '',
-                idx;
+            idx;
             for (idx in self.scope.renderedRows) {
                 hash += self.scope.renderedRows[idx].$$hashKey;
             }
